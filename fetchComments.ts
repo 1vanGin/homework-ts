@@ -1,27 +1,33 @@
-// interface IComment {
-//     ID: number
-//     PostId: number
-//     Email: string
-//     Name: string
-//     Body: string
-// }
+import fetch, {Response} from "node-fetch";
+const COMMENTS_URL: string = 'https://jsonplaceholder.typicode.com/comments?_limit=5';
 
-const COMMENTS_URL: string = 'https://jsonplaceholder.typicode.com/comments';
+interface IComment {
+    id: number
+    postId: number
+    email: string
+    name: string
+    body: string
+}
 
-const getData = async (url: string) => {
-    try{
-        const response = await fetch(url)
-        const data = await response.json()
-        console.log(1, data)
-    }catch(e){
+const getData = async (url: string): Promise<Array<IComment>> => {
+    try {
+        const response: Response = await fetch(url)
+        return await response.json()
+    } catch (e) {
         console.error(e)
+        throw(e)
     }
 }
 
+const logger = (data: IComment[]): void => {
+    data.forEach(comment => {
+        console.log(`ID: ${comment.id}, Email: ${comment.email}, Name: ${comment.name}, Body: ${comment.body}, PostId: ${comment.postId}`)
+        console.log(`------------------------`)
+    })
+}
+
 getData(COMMENTS_URL)
-    .then(data => {
-        console.log(2, data)
-    });
+    .then(data => logger(data));
 
 /**
  * ID: 1, Email: Eliseo...
